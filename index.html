@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Backtracking Engine - Visualizer</title>
+    <!-- Modern Tech-styled Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Immersive Animated Blob Background -->
+    <div class="mesh-bg"></div>
+
+    <div class="app-wrapper">
+        <header class="main-header">
+            <h1>AI Backtracking Engine</h1>
+            <p>A crystal clear visualization of algorithmic depth and recursive pathfinding.</p>
+        </header>
+
+        <div class="content-layout">
+
+            <aside class="glass-panel controls">
+                <div class="control-section">
+                    <h3>Puzzle Matrix Setup</h3>
+                    <div class="btn-group">
+                        <button class="btn preset-btn" data-preset="easy">Easy</button>
+                        <button class="btn preset-btn" data-preset="medium">Medium</button>
+                        <button class="btn preset-btn active" data-preset="hard">Hard</button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Engine Speed Control</h3>
+                    <input type="range" id="speed-slider" min="1" max="100" value="85">
+                    <div class="speed-labels"><span>Step-by-Step</span><span>Instant Processing</span></div>
+                </div>
+
+                <div class="control-section">
+                    <h3>Visual Output</h3>
+                    <div class="toggle-wrap">
+                        <input type="checkbox" id="toggle-visualize" checked>
+                        <label for="toggle-visualize">Simulate Algorithm Live</label>
+                    </div>
+                </div>
+
+                <div class="action-box">
+                    <button class="btn btn-primary" id="btn-solve">INITIALIZE AI</button>
+                    <button class="btn btn-secondary" id="btn-clear">CLEAR MATRIX</button>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <span>Nodes Evaluated</span>
+                        <div id="nodes-count" style="font-feature-settings: 'tnum';">0</div>
+                    </div>
+                    <div class="metric">
+                        <span>Search Depth</span>
+                        <div id="depth-count" style="font-feature-settings: 'tnum';">0 / 81</div>
+                    </div>
+                </div>
+            </aside>
+
+            <main class="board-wrapper">
+                <div class="glass-panel board-container" id="board-container">
+
+                    <!-- Inner Wrapper perfectly mirrors the 580x580 board size for precise SVG & HUD mapping -->
+                    <div class="board-inner-wrapper" id="board-inner-wrapper">
+                        <!-- Connecting Laser Line -->
+                        <svg id="path-svg">
+                            <polyline id="search-path" points="" />
+                        </svg>
+
+                        <!-- Dynamic Tooltip HUD HUD -->
+                        <div id="ai-hud" class="ai-hud hidden">
+                            <div class="hud-content">
+                                <span class="hud-num">?</span>
+                                <span class="hud-status">Testing constraint...</span>
+                            </div>
+                        </div>
+
+                        <!-- CSS Grid for the Board -->
+                        <div id="sudoku-board" class="sudoku-board"></div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <audio id="success-sound" src="https://assets.mixkit.co/active_storage/sfx/2018/2018-preview.mp3"
+        preload="auto"></audio>
+    <audio id="error-sound" src="https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3"
+        preload="auto"></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
