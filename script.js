@@ -27,12 +27,57 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Interactive visualizer array for SVG laser lines
     let callStack = []; 
+    let currentPuzzleString = "";
 
     const puzzles = {
         easy: "070000043040009610800634900094052000358460020000800530080070091902100005007040800",
         medium: "020608000580009700000040000370000500600000004008000013000020000009800036000306090",
         hard: "000600400700003600000091080000000000050180003000306045040200060903000000020000100"
     };
+
+    function getRandomPuzzle(difficulty) {
+        let basePuzzle = puzzles[difficulty];
+        // 1. Shuffle digit mapping
+        const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        for (let i = digits.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [digits[i], digits[j]] = [digits[j], digits[i]];
+        }
+        const mapping = { '0': '0' };
+        for (let i = 0; i < 9; i++) {
+            mapping[(i + 1).toString()] = digits[i].toString();
+        }
+        
+        let mappedPuzzle = basePuzzle.split('').map(char => mapping[char]).join('');
+        
+        // 2. Random rotations/reflections
+        let grid = [];
+        for (let i = 0; i < 9; i++) {
+            grid.push(mappedPuzzle.substring(i * 9, i * 9 + 9).split(''));
+        }
+        
+        const transformations = Math.floor(Math.random() * 8); // 8 symmetries of a square
+        
+        // Rotate 90 degrees multiple times
+        for (let t = 0; t < transformations % 4; t++) {
+            let newGrid = Array(9).fill(null).map(() => Array(9));
+            for (let r = 0; r < 9; r++) {
+                for (let c = 0; c < 9; c++) {
+                    newGrid[c][8 - r] = grid[r][c];
+                }
+            }
+            grid = newGrid;
+        }
+        
+        // Reflect horizontally
+        if (transformations >= 4) {
+            for (let r = 0; r < 9; r++) {
+                grid[r].reverse();
+            }
+        }
+        
+        return grid.map(row => row.join('')).join('');
+    }
 
     const playSound = (audio) => {
         try { audio.currentTime = 0; audio.play().catch(e => e); } catch(e) {}
@@ -63,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(isSolving) return;
             presetBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            setBoard(puzzles[btn.dataset.preset]);
+            currentPuzzleString = getRandomPuzzle(btn.dataset.preset);
+            setBoard(currentPuzzleString);
         });
     });
 
@@ -102,8 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     btnClear.addEventListener('click', () => {
-        const activePreset = document.querySelector('.preset-btn.active').dataset.preset;
-        setBoard(puzzles[activePreset]);
+        setBoard(currentPuzzleString);
     });
 
     function getBoardMatrix() {
@@ -347,5 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     initBoard();
-    setBoard(puzzles.medium);
+    currentPuzzleString = getRandomPuzzle('medium');
+    setBoard(currentPuzzleString);
 });
